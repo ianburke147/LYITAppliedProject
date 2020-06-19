@@ -1,0 +1,31 @@
+ INSERT INTO LYIT20_INVOICE  VALUES                                     00010018
+  (100001, '2019-12-16','Shipped',2,100.50,101)   ;                     00020017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00030018
+  (100002, '2019-10-18','Arrived',1,50.00,102)   ;                      00040017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00050018
+  (100003, '2019-12-10','Shipped',2,150.45,103)   ;                     00060017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00070018
+  (100004, '2019-12-15','Dispatched',1,20.00,104)   ;                   00080017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00090018
+  (100005, '2019-11-29','Shipped',2,400.00,105)   ;                     00100017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00110018
+  (100006, '2019-12-02','Dispatched',1,350.00,106)   ;                  00120017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00130018
+  (100007, '2019-12-08','Dispatched',2,30.55,107)   ;                   00140017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00150018
+  (100008, '2019-12-05','Dispatched',7,1000.99,108)   ;                 00160017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00170018
+  (100009, '2019-12-17','Shipped',3,980.50,109)   ;                     00180017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00190018
+  (100010, '2019-12-11','Arrived',5,500.00,110)   ;                     00200017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00210018
+  (100011, '2020-01-16','Dispatched',7,100.50,111)   ;                  00220017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00230018
+  (100012, '2020-01-01','Arrived',1,50.00,112)   ;                      00240017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00250018
+  (100013, '2020-01-03','Shipped',2,15.45,113)   ;                      00260017
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00270018
+  (100014, '2019-12-23','Dispatched',1,10.00,114)   ;                   00280019
+ INSERT INTO  LYIT20_INVOICE  VALUES                                    00290018
+  (100015, '2019-12-27','Shipped',2,800.00,115)   ;                     00300017
+

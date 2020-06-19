@@ -1,0 +1,444 @@
+      ******************************************************************
+      * AUTHOR: IAN BURKE                                              *
+      *                                                                *
+      * DATE: 10/06/2020                                               *
+      *                                                                *
+      * DESCRIPTION: 1. PROGRAM WHICH USES THE CURSOR FEATURE TO PRINT *
+      *                 ALL ROWS CONTAINED WITHIN BOTH DB2 TABLES      *
+      *              2. INCORPORATE ERROR HANDLING USING THE SQLCODE   *
+      *                 FIELD.                                         *
+      *              3. PRINT ALL OF THE RECORDS AND FIELDS ON REPORT  *
+      *                 OUTPUT (OREPORT)                               *
+      *                                                                *
+      * PROGRAM ID:  DB2COBAL                                          *
+      ******************************************************************
+      ******************************************************************
+      *                                                                *
+      *     THE IDENTIFICATION DIVISION SECTION                        *
+      *                                                                *
+      ******************************************************************
+       IDENTIFICATION DIVISION.                                         
+       PROGRAM-ID. DB2COBAL.                                            
+       ENVIRONMENT DIVISION.                                            
+      * USED TO SHOW THE COMPUTER WRITING THE PROGRAM FOR.              
+       CONFIGURATION SECTION.                                           
+       SOURCE-COMPUTER.  IBM-3900.                                      
+       OBJECT-COMPUTER.  IBM-3900.                                      
+      ***************** OUTPUT FILES ***************************
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT PRTOUT ASSIGN TO OREPORT.
+      **************** DATA DIVISION **************************
+       DATA DIVISION.                                                   
+       FILE SECTION.
+      ***************  OUTPUT REPORT **************************
+       FD PRTOUT
+             RECORDING MODE IS F.
+
+       01 PRTOUT-RECORD        PIC X(174).
+      * *******************************************************
+      *                                                       *
+      * *   WORKING STORAGE SECTION                           *
+      *                                                       *
+      * *******************************************************
+       WORKING-STORAGE SECTION.                                         
+
+      ***** DECLARING THE HEADING LINES ***********************
+       01 HEADING-LINE-1.
+           05 FILLER           PIC X(1) VALUE SPACES.
+           05 FILLER           PIC X(12) VALUE SPACES.
+           05 FILLER           PIC X(72) VALUE SPACES.
+           05 FILLER           PIC X(9) VALUE 'CUSTOMER '.
+           05 FILLER           PIC X(8) VALUE 'INVOICE '.
+           05 FILLER           PIC X(6) VALUE 'REPORT'.
+           05 FILLER           PIC X(49) VALUE SPACES.
+           05 FILLER           PIC X(6) VALUE 'DATE: '.
+           05 WR-TODAY-DAY     PIC X(2).
+           05 FILLER           PIC X(1) VALUE '/'.
+           05 WR-TODAY-MON     PIC X(2).
+           05 FILLER           PIC X(1) VALUE '/'.
+           05 WR-TODAY-YEAR    PIC X(4).
+
+       01 HEADING-LINE-2.
+           05 FILLER           PIC X(161)   VALUE SPACES.
+           05 FILLER           PIC X(7)    VALUE 'PAGE:  '.
+           05 WR-PAGE-COUNT    PIC Z9(2).
+
+       01 HEADING-LINE-3.
+           05 FILLER           PIC X(1)   VALUE SPACES.
+           05 FILLER           PIC X(7)    VALUE 'INVOICE'.
+           05 FILLER           PIC X(5)   VALUE SPACES.
+           05 FILLER           PIC X(7)    VALUE 'INVOICE'.
+
+       01 HEADING-LINE-4.
+           05 FILLER           PIC X(2) VALUE SPACES.
+           05 FILLER           PIC X(2) VALUE 'ID'.
+           05 FILLER           PIC X(7) VALUE SPACES.
+           05 FILLER           PIC X(4) VALUE 'DATE'.
+           05 FILLER           PIC X(5) VALUE SPACES.
+           05 FILLER           PIC X(4) VALUE 'NAME'.
+           05 FILLER           PIC X(23) VALUE SPACES.
+           05 FILLER           PIC X(7) VALUE 'SURNAME'.
+           05 FILLER           PIC X(20) VALUE SPACES.
+           05 FILLER           PIC X(7) VALUE 'ADDRESS'.
+           05 FILLER           PIC X(20) VALUE SPACES.
+           05 FILLER           PIC X(4) VALUE 'CITY'.
+           05 FILLER           PIC X(18) VALUE SPACES.
+           05 FILLER           PIC X(7) VALUE 'ZIPCODE'.
+           05 FILLER           PIC X(2) VALUE SPACES.
+           05 FILLER           PIC X(6) VALUE 'STATUS'.
+           05 FILLER           PIC X(19) VALUE SPACES.
+           05 FILLER           PIC X(3) VALUE 'QTY'.
+           05 FILLER           PIC X(4) VALUE SPACES.
+           05 FILLER           PIC X(6) VALUE 'TOTAL '.
+
+       01 HEADING-LINE-5.
+           05 FILLER           PIC X     VALUE SPACES.
+
+      * ******************************************************
+      *                                                      *
+      * *   OREPORT OUTPUT RECORD SECTION                    *
+      *                                                      *
+      * ******************************************************
+       01 REPORT-LINE.
+           05 RL-INVNO         PIC X(6).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-INVDATE       PIC X(10).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-FNAME         PIC X(25).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-LNAME         PIC X(25).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-ADDR          PIC X(25).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-CITY          PIC X(20).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-ZIPCODE       PIC X(7).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-INVSTATUS     PIC X(20).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-INVQTY        PIC Z(5).
+           05 FILLER           PIC X(2)  VALUE SPACES.
+           05 RL-INVTOTAL      PIC $ZZ,ZZ9.99.
+
+      * ******************************************************
+      *                                                      *
+      * *   OVERALL TOTALS SECTION                           *
+      *                                                      *
+      * ******************************************************
+
+       01 OVERALL-LINE-1.
+           05 FILLER           PIC X      VALUE SPACES.
+       01 OVERALL-LINE-2.
+             05  FILLER          PIC X(80)   VALUE SPACES.
+             05  FILLER  PIC X(4)   VALUE '****' OCCURS 10 TIMES.
+             05  FILLER          PIC X   VALUE '*'.
+       01 OVERALL-LINE-3.
+             05  FILLER          PIC X(63)   VALUE SPACES.
+             05  FILLER          PIC X(15)  VALUE 'OVERALL TOTALS:'.
+             05  FILLER          PIC X(2)   VALUE SPACES.
+             05  FILLER          PIC X      VALUE '*'.
+             05  FILLER          PIC X(3)   VALUE SPACES.
+             05  FILLER          PIC X(9)   VALUE 'PURCHASES'.
+             05  FILLER          PIC X(7)  VALUE SPACES.
+             05  FILLER          PIC X      VALUE '*'.
+             05  FILLER          PIC X(3)  VALUE SPACES.
+             05  WR-PURCHASES-CNT  PIC ZZZ9   VALUE ZEROS.
+             05  FILLER          PIC X(12)  VALUE SPACES.
+             05  FILLER          PIC X      VALUE '*'.
+       01 OVERALL-LINE-4.
+             05  FILLER          PIC X(80)   VALUE SPACES.
+             05  FILLER          PIC X      VALUE '*'.
+             05  FILLER          PIC X(3)   VALUE SPACES.
+             05  FILLER          PIC X(12)  VALUE 'TOTAL INCOME'.
+             05  FILLER          PIC X(4)  VALUE SPACES.
+             05  FILLER          PIC X      VALUE '*'.
+             05  FILLER          PIC X(3)  VALUE SPACES.
+             05  WR-TOTAL-INVTOTAL PIC $ZZ,ZZ9.99 VALUE ZEROS.
+             05  FILLER          PIC X(6)  VALUE SPACES.
+             05  FILLER          PIC X      VALUE '*'.
+       01 OVERALL-LINE-5.
+             05  FILLER          PIC X(80)   VALUE SPACES.
+             05  FILLER  PIC X(4)   VALUE '****' OCCURS 10 TIMES.
+             05  FILLER          PIC X   VALUE '*'.
+
+      * ******************************************************
+      * *   TOTAL VARIABLES                                  *
+      * ******************************************************
+       01 WS-PURCHASES           PIC 9(7) VALUE ZEROS.
+       01 WS-TOTAL-INVTOTAL      PIC 9(5)V99 VALUE ZEROS.
+
+      *************** SWITCHES FOR CURSOR *********************
+       01 SWITCHES.
+          05 VALID-CURSOR-SW   PIC X VALUE 'Y'.
+             88 VALID-CURSOR         VALUE 'Y'.
+             88 NOT-VALID-CURSOR     VALUE 'N'.
+          05 END-OF-INVOICES-SW  PIC X VALUE 'N'.
+             88 END-OF-INVOICES      VALUE 'Y'.
+
+      *************************************************************
+      * SQLCODE =  000 MEANS SUCCESSFUL STATEMENT                 *
+      * SQLCODE = +100 "NO DATA" WAS FOUND. FOR EXAMPLE,          *
+      *                A FETCH STATEMENT RETURNED NO DATA         *
+      *                BECAUSE THE CURSOR WAS POSITIONED          *
+      *                AFTER THE LAST ROW OF THE RESULT TABLE.    *
+      * POSITIVE SIGN: STATEMENT SUCCESSFUL, BUT WITH SOME        *
+      *                EXCEPTIONAL CONDITION                      *
+      * NEGATIVE SIGN: SERIOUS ERROR DETECTED                     *
+      *************************************************************
+
+      ***************** DATE VARIABLES ************************
+      ************ REPORT DATE FORMAT: DD/MM/YYYY *************
+       01 TODAY-DATE.
+            03 WS-YEAR  PIC 9999.
+            03 WS-MONTH PIC 99.
+            03 WS-DAY   PIC 99.
+
+      **************** COUNTER VARIABLES **********************
+       01 PRINT-FIELDS         COMP-3.
+          05 PAGE-COUNT        PIC S9(3) VALUE ZERO.
+          05 LINE-COUNT        PIC S9(3) VALUE +999.
+          05 LINES-ON-PAGE     PIC S9(3) VALUE +10.
+          05 SPACE-CONTROL     PIC S9(3) VALUE +1.
+
+      * ******************************************************
+      *                                                      *
+      * *  EMBEDDED SQL STATMENT SECTION                     *
+      *                                                      *
+      * ******************************************************
+      * 1 INCLUDE STATEMENT FOR THE DCLGEN OUTPUT FOR CUSTOMER TABLE    
+           EXEC SQL                                                     
+                INCLUDE CUSTOMER                                        
+           END-EXEC.                                                    
+      * 2 INCLUDE STATEMENT FOR THE DCLGEN OUTPUT FOR ORDERS TABLE      
+           EXEC SQL                                                     
+                INCLUDE INVOICE                                         
+           END-EXEC.                                                    
+      * 3 INCLUDE STATEMENT FOR THE SQL COMMUNICATION AREA              
+           EXEC SQL                                                     
+                INCLUDE SQLCA                                           
+           END-EXEC.                                                    
+      * 4 DECLARE CURSOR PROCESSING AS WITH SQL SELECT STATEMENT        
+           EXEC SQL                                                     
+                DECLARE CUST-CUR CURSOR FOR                             
+                SELECT A.INVNO, A.INVDATE, B.FNAME,                     
+                B.LNAME, B.ADDR, B.CITY, B.ZIPCODE,
+                A.INVSTATUS, A.INVQTY, A.INVTOTAL                       
+                FROM LYIT20_CUSTOMERS B                                 
+                  INNER JOIN LYIT20_INVOICE A                           
+                  ON B.CUSTNO = A.CUSTNO
+                ORDER BY INVDATE                                        
+           END-EXEC.                                                    
+
+      * ******************************************************
+      *                                                      *
+      * *  PROCEDURE SECTION                                 *
+      *                                                      *
+      * ******************************************************
+       PROCEDURE DIVISION.                                              
+            PERFORM BEGIN.
+            PERFORM MAIN-PROCESS UNTIL END-OF-INVOICES
+                                   OR NOT-VALID-CURSOR
+            PERFORM FINISH.
+            STOP RUN.
+
+      * ******************************************************
+      *                                                      *
+      * *  BEGIN SECTION                                     *
+      *                                                      *
+      * ******************************************************
+       BEGIN SECTION.
+      ***************** GET TODAYS DATE ***********************
+            ACCEPT TODAY-DATE FROM DATE YYYYMMDD.
+      ************** WRITE DATE TO REPORT *********************
+            MOVE WS-YEAR TO WR-TODAY-YEAR.
+            MOVE WS-MONTH TO WR-TODAY-MON.
+            MOVE WS-DAY TO WR-TODAY-DAY.
+
+      ************** OPEN OUTPUT ******************************
+            OPEN OUTPUT PRTOUT.                                         
+
+      ************** OPEN CURSOR ******************************
+            EXEC SQL                                                    
+                OPEN CUST-CUR                                           
+            END-EXEC.                                                   
+            DISPLAY 'SQLCODE: ' SQLCODE                                 
+            DISPLAY 'OPEN '                                             
+            IF SQLCODE NOT = 0                                          
+              MOVE 'N' TO VALID-CURSOR-SW                               
+              DISPLAY 'CURSOR DIDNT OPEN SUCCESSFULLY'
+              DISPLAY 'SQLCODE: ' SQLCODE
+            END-IF
+      ************** FETCH FIRST ROW **************************
+            PERFORM FETCH-ROW.
+
+       BEGIN-EXIT.
+            EXIT.
+      **************** END OF BEGIN SECTION *******************
+
+      * *******************************************************
+      * *             MAIN PROCESS SECTION                    *
+      * * THIS IS OUR MAIN LOOP TO PROCESS THE LOGIC          *
+      *                                                       *
+      * *******************************************************
+       MAIN-PROCESS SECTION.                                            
+            DISPLAY 'MAIN' END-OF-INVOICES-SW
+            DISPLAY VALID-CURSOR-SW
+      * AVOID EXTRA LINES PRINTED OUT AT END
+            IF NOT END-OF-INVOICES
+                IF VALID-CURSOR
+                    PERFORM MOVE-ROWS-TO-OUT-VARS
+                    COMPUTE WS-TOTAL-INVTOTAL = WS-TOTAL-INVTOTAL
+                                                + INVTOTAL
+                    IF LINE-COUNT > LINES-ON-PAGE
+                       PERFORM PRINT-HEADING
+                       MOVE 1 TO LINE-COUNT
+                    END-IF
+                    PERFORM FETCH-ROW
+                    MOVE REPORT-LINE TO PRTOUT-RECORD
+                    PERFORM WRITE-REPORT-LINE
+                    ADD 1 TO LINE-COUNT
+                    ADD 1 TO WS-PURCHASES
+                    MOVE 1 TO SPACE-CONTROL
+                END-IF
+            END-IF.
+       MAIN-PROCESS-EXIT.
+           EXIT.
+      ************ END OF MAIN PROCESS SECTION ****************
+
+      * *******************************************************
+      *                                                       *
+      * * FETCH ROW SECTION                                   *
+      *                                                       *
+      * *******************************************************
+
+       FETCH-ROW SECTION.                                               
+      * INITIALISE VARIABLES BEFORE EACH FETCH                          
+           INITIALIZE INVNO, INVDATE, FNAME, LNAME,                     
+                ADDR, CITY, ZIPCODE,                                    
+                INVSTATUS, INVQTY, INVTOTAL                             
+      * STORE THE TABLE DATA INTO THESE HOST VARIABLES FOR COBOL USE    
+           EXEC SQL                                                     
+               FETCH CUST-CUR                                           
+                   INTO :INVNO, :INVDATE, :FNAME, :LNAME,               
+                        :ADDR, :CITY, :ZIPCODE,                         
+                        :INVSTATUS, :INVQTY, :INVTOTAL                  
+           END-EXEC.                                                    
+           DISPLAY 'DATA FETCHED'
+           IF SQLCODE = 100
+               MOVE 'Y' TO END-OF-INVOICES-SW
+           ELSE
+               IF SQLCODE NOT = 0
+                   MOVE 'N' TO VALID-CURSOR-SW
+                   DISPLAY 'FETCH UNSUCCESSFUL'
+                   DISPLAY 'SQLCODE' SQLCODE
+               END-IF
+           END-IF.
+       FETCH-ROW-EXIT.
+      ************ END OF FETCH ROW SECTION *******************
+
+      * *******************************************************
+      *                                                       *
+      * * MOVE ROWS TO OUTPUT VARIABLES SECTION               *
+      *                                                       *
+      * *******************************************************
+       MOVE-ROWS-TO-OUT-VARS SECTION.
+           MOVE INVNO TO RL-INVNO                                        
+           MOVE INVDATE TO RL-INVDATE                                    
+           MOVE FNAME-TEXT TO RL-FNAME                                   
+           MOVE LNAME-TEXT TO RL-LNAME                                   
+           MOVE ADDR-TEXT TO RL-ADDR                                     
+           MOVE CITY-TEXT TO RL-CITY                                     
+           MOVE ZIPCODE-TEXT TO RL-ZIPCODE                               
+           MOVE INVSTATUS-TEXT TO RL-INVSTATUS                           
+           MOVE INVQTY TO RL-INVQTY                                      
+           MOVE INVTOTAL TO RL-INVTOTAL.                                 
+       MOVE-ROWS-TO-OUT-VARS-EXIT.
+      ******** END OF MOVE-ROWS-TO-OUT-VARS *******************
+
+      * *******************************************************
+      *                                                       *
+      * * WRITE REPORT LINE SECTION                           *
+      *                                                       *
+      * *******************************************************
+       WRITE-REPORT-LINE SECTION.
+           WRITE PRTOUT-RECORD
+               AFTER SPACE-CONTROL LINES.
+       WRITE-REPORT-LINE-EXIT.
+      ************ END OF WRITE-REPORT-LINE *******************
+
+
+      * *******************************************************
+      *                                                       *
+      * * PRINT HEADING SECTION                               *
+      *                                                       *
+      * *******************************************************
+       PRINT-HEADING SECTION.
+           ADD 1 TO PAGE-COUNT.
+           MOVE PAGE-COUNT TO WR-PAGE-COUNT.
+           MOVE HEADING-LINE-1 TO PRTOUT-RECORD.
+           WRITE PRTOUT-RECORD
+               AFTER ADVANCING PAGE.
+           MOVE 2 TO SPACE-CONTROL.
+           MOVE HEADING-LINE-2 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE HEADING-LINE-3 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE HEADING-LINE-4 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE HEADING-LINE-5 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+       PRINT-HEADING-EXIT.
+      ************ END OF PRINT-HEADING SECTION ***************
+
+
+      * *******************************************************
+      *                                                       *
+      * * WRITE OVERALL TOTALS SECTION                        *
+      *                                                       *
+      * *******************************************************
+
+       WRITE-OVERALL-TOTALS SECTION.
+           MOVE WS-PURCHASES TO WR-PURCHASES-CNT
+           MOVE WS-TOTAL-INVTOTAL TO WR-TOTAL-INVTOTAL
+           MOVE OVERALL-LINE-1 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE OVERALL-LINE-2 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE OVERALL-LINE-3 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE OVERALL-LINE-4 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+           MOVE OVERALL-LINE-5 TO PRTOUT-RECORD.
+           PERFORM WRITE-REPORT-LINE.
+
+       WRITE-OVERALL-TOTALS-EXIT.
+      ******** END OF WRITE-OVERALL-TOTALS SECTION ************
+
+      * *******************************************************
+      *                                                       *
+      * * FINISH SECTION                                      *
+      *                                                       *
+      * *******************************************************
+       FINISH SECTION.
+      * ************  CLOSE CURSOR ****************************
+            EXEC SQL
+                CLOSE CUST-CUR
+            END-EXEC.
+            DISPLAY 'CURSOR CLOSED'
+            IF SQLCODE = 100
+                MOVE 'Y' TO END-OF-INVOICES-SW
+            ELSE
+                IF SQLCODE NOT = 0
+                    MOVE 'N' TO VALID-CURSOR-SW
+                    DISPLAY 'CLOSE OF CURSOR UNSUCCESSFUL'
+                    DISPLAY 'SQLCODE' SQLCODE
+                END-IF
+            END-IF.
+      * ******** WRITE OVERALL TOTALS AT BOTTOM ***************
+            PERFORM WRITE-OVERALL-TOTALS
+      * ************* CLOSE OREPORT ***************************
+            CLOSE PRTOUT.
+       FINISH-EXIT.
+      * ************* END OF FINISH SECTION *******************
+      * ************* END OF PROGRAM **************************

@@ -1,0 +1,57 @@
+      ******************************************************************
+      * DCLGEN TABLE(LYIT20_CUSTOMERS)                                 *
+      *        LIBRARY(LIT0002.LYIT11.DB2.SRCINC(CUSTOMER))            *
+      *        ACTION(REPLACE)                                         *
+      *        LANGUAGE(COBOL)                                         *
+      *        QUOTE                                                   *
+      *        LABEL(YES)                                              *
+      * ... IS THE DCLGEN COMMAND THAT MADE THE FOLLOWING STATEMENTS   *
+      ******************************************************************
+           EXEC SQL DECLARE LYIT20_CUSTOMERS TABLE
+           ( CUSTNO                         INTEGER NOT NULL,
+             FNAME                          VARCHAR(25) NOT NULL,
+             LNAME                          VARCHAR(25) NOT NULL,
+             EMAIL                          VARCHAR(25) NOT NULL,
+             ADDR                           VARCHAR(25) NOT NULL,
+             CITY                           VARCHAR(20) NOT NULL,
+             STATE                          VARCHAR(20) NOT NULL,
+             ZIPCODE                        VARCHAR(7) NOT NULL
+           ) END-EXEC.
+      ******************************************************************
+      * COBOL DECLARATION FOR TABLE LYIT20_CUSTOMERS                   *
+      ******************************************************************
+       01  DCLLYIT20-CUSTOMERS.
+      *    *************************************************************
+           10 CUSTNO               PIC S9(9) USAGE COMP.
+      *    *************************************************************
+           10 FNAME.
+              49 FNAME-LEN         PIC S9(4) USAGE COMP.
+              49 FNAME-TEXT        PIC X(25).
+      *    *************************************************************
+           10 LNAME.
+              49 LNAME-LEN         PIC S9(4) USAGE COMP.
+              49 LNAME-TEXT        PIC X(25).
+      *    *************************************************************
+           10 EMAIL.
+              49 EMAIL-LEN         PIC S9(4) USAGE COMP.
+              49 EMAIL-TEXT        PIC X(25).
+      *    *************************************************************
+           10 ADDR.
+              49 ADDR-LEN          PIC S9(4) USAGE COMP.
+              49 ADDR-TEXT         PIC X(25).
+      *    *************************************************************
+           10 CITY.
+              49 CITY-LEN          PIC S9(4) USAGE COMP.
+              49 CITY-TEXT         PIC X(20).
+      *    *************************************************************
+           10 STATE.
+              49 STATE-LEN         PIC S9(4) USAGE COMP.
+              49 STATE-TEXT        PIC X(20).
+      *    *************************************************************
+           10 ZIPCODE.
+              49 ZIPCODE-LEN       PIC S9(4) USAGE COMP.
+              49 ZIPCODE-TEXT      PIC X(7).
+      ******************************************************************
+      * THE NUMBER OF COLUMNS DESCRIBED BY THIS DECLARATION IS 8       *
+      ******************************************************************
+

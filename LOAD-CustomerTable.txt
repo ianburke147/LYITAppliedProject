@@ -1,0 +1,46 @@
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (101, 'Ian','Burke','mrsparking@gmail.com', 'eyre square', 'Galway',
+    'Connacht', 'H11DD2R' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (102, 'Homer','Simpson','mrplow@hotmail.com', '742 Evergreen Terrace',
+    'Springfield','Colorado', 'O23AS4F' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (103, 'Ted','Crilly','frted@outlook.com', 'Parochial house',
+    'Craggy Island','Munster', 'M78YU5C' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (104, 'Snoop','Dogg','snoopydoggy@gmail.com', 'Downtown',
+      'long Beach','California', 'Z67AD8Z' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (105, 'Bon','Jovi','livingonaprayer@gmail.com', 'River Road',
+      'Middletown','New Jersey', 'L09VB6M' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (106, 'Stevie','Ray Vaughan','srvblues@hotmail.com', 'Texas Flood',
+      'Dallas','Texas', 'A55FG7K' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (107, 'James','Bond','007@mib.com', 'Wellington Square',
+      'Chelsea','London', 'K89OO7J' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (108, 'Arnold','Schwarzenegger','gettothechoppa@gmail.com',
+      'Hollywood','Los Angeles','California', 'L6UBG16' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (109, 'Stone Cold','Steve Austin','bottomline@wwe.com',
+      'Broken Skull Ranch','Austin','Texas', 'T11A316' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (110, 'Joe','Rogan','jrexperience@ufc.com', 'Bell Canyon',
+      'Los Angeles','California', 'H11DD2R' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (111, 'Walter','White','Heisnberg@gmail.com', '308 Negra Arroyo Lane',
+       'Albuquerque', 'New Mexico', 'BR1BA14' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (112, 'Tony','Suprano','fattony@hotmail.com', '14 Aspen Drive',
+      'North Caldwell','New Jersey', 'NJ1874F' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (113, 'Jon','Snow','whitewolf@outlook.com', 'Winterfell',
+      'The North','Westeros', 'R2LTARG' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (114, 'Luke','Skywalker','jedimaster@gmail.com', 'Tatoonie',
+      'Space','farfar away', 'I123555' );
+ INSERT INTO  LYIT20_CUSTOMERS VALUES
+  (115, 'Bruce','Wayne','batman@gmail.com', 'Downtown',
+      'Gotham','New Jersey', 'G0T9115' );
+
