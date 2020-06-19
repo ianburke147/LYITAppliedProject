@@ -1,0 +1,15 @@
+--DROP TABLE LYIT20_INVOICE                                     ;       
+CREATE TABLE LYIT20_INVOICE                                             
+(INVNO                  INT          NOT NULL,                          
+ INVDATE                DATE         NOT NULL,                          
+ INVSTATUS              VARCHAR(20)  NOT NULL,                          
+ INVQTY                 SMALLINT     NOT NULL,                          
+ INVTOTAL               DECIMAL(7,2) NOT NULL,                          
+ CUSTNO                 INT          NOT NULL,                          
+ PRIMARY KEY    (INVNO)                 )                               
+IN DATABASE  LIT0002                                ;                   
+CREATE UNIQUE INDEX     LYIT20_INVOICE      ON  LYIT20_INVOICE          
+                    (INVNO         )                          ;         
+ALTER TABLE  LYIT20_INVOICE                                             
+ADD FOREIGN KEY (CUSTNO)                                                
+   REFERENCES  LYIT20_CUSTOMERS (CUSTNO) ON DELETE RESTRICT     ;       
